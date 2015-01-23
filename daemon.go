@@ -58,7 +58,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/fatih/color"
-	"github.com/howeyc/fsnotify"
+	"gopkg/fsnotify.v1"
 	"io"
 	"log"
 	"os"
@@ -343,7 +343,7 @@ func main() {
 				if excludedDirs.Matches(info.Name()) {
 					return filepath.SkipDir
 				} else {
-					return watcher.Watch(path)
+					return watcher.Add(path)
 				}
 			}
 			return err
@@ -354,8 +354,8 @@ func main() {
 		}
 
 	} else {
-		if err := watcher.Watch(*flag_directory); err != nil {
-			log.Fatal("watcher.Watch():", err)
+		if err := watcher.Add(*flag_directory); err != nil {
+			log.Fatal("watcher.Add():", err)
 		}
 	}
 
@@ -373,7 +373,7 @@ func main() {
 
 	for {
 		select {
-		case ev := <-watcher.Event:
+		case ev := <-watcher.Events:
 			if ev.Name != "" {
 				base := filepath.Base(ev.Name)
 
@@ -384,7 +384,7 @@ func main() {
 				}
 			}
 
-		case err := <-watcher.Error:
+		case err := <-watcher.Errors:
 			if v, ok := err.(*os.SyscallError); ok {
 				if v.Err == syscall.EINTR {
 					continue
