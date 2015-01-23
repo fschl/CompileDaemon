@@ -58,7 +58,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/fatih/color"
-	"gopkg/fsnotify.v1"
+	"gopkg.in/fsnotify.v1"
 	"io"
 	"log"
 	"os"
